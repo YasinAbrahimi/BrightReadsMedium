@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Extreme Challenge - Word Quiz</title>
+</head>
+<body style="text-align: center; font-family: Arial; background-color: #e3f2fd;">
+  <h1>Extreme Challenge - Word Quiz</h1>
+  <p>Click the word that was spoken aloud.</p>
+  <button onclick="startQuiz()" style="font-size:1rem; padding:0.5rem 1rem; border:none; background-color:#42a5f5; color:white; border-radius:8px; cursor:pointer;">Play Word</button>
+  <div id="words" style="margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center;"></div>
+
+  <script>
+    const words = [
+      "zebra", "wizard", "quartz", "vex", "nymph", "jigsaw", "fox", "quiz", "hazy", "opal",
+      "fjord", "jump", "jazz", "quick", "ghost", "whack", "box", "wax", "glow", "joke"
+    ];
+
+    const container = document.getElementById("words");
+    let correctWord = "";
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function startQuiz() {
+      resetButtons();
+
+      correctWord = words[Math.floor(Math.random() * words.length)];
+
+      const utter = new SpeechSynthesisUtterance(correctWord);
+      window.speechSynthesis.speak(utter);
+    }
+
+    function resetButtons() {
+      container.innerHTML = "";
+      const shuffled = shuffle([...words]);
+
+      shuffled.forEach(word => {
+        const btn = document.createElement('button');
+        btn.textContent = word;
+        btn.style = "font-size:1.2rem; margin:10px; padding:1rem 1.5rem; border-radius:10px; background-color:#bbdefb; border:none; cursor:pointer;";
+
+        btn.onclick = () => {
+          if (btn.textContent === correctWord) {
+            btn.style.backgroundColor = "#c8e6c9"; // green
+          } else {
+            btn.style.backgroundColor = "#ffcdd2"; // red
+            // Show correct word
+            [...container.children].forEach(b => {
+              if (b.textContent === correctWord) {
+                b.style.backgroundColor = "#c8e6c9";
+              }
+            });
+          }
+        };
+
+        container.appendChild(btn);
+      });
+    }
+
+    // Initial render
+    resetButtons();
+  </script>
+</body>
+</html>
